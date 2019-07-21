@@ -1,0 +1,33 @@
+{
+    "name": "lamoda/gs1-barcode-parser",
+    "description": "GS1 Barcode parser and validator compatible with official GS1 documentation",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lamoda developers",
+            "homepage": "https://tech.lamoda.ru/"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lamoda\\GS1Parser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lamoda\\GS1Parser\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpunit/phpunit": "^7.5"
+    }
+}
