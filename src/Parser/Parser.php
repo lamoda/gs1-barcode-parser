@@ -13,6 +13,90 @@ use Lamoda\GS1Parser\Exception\InvalidBarcodeException;
  */
 final class Parser implements ParserInterface
 {
+    private const ENCODABLE_VALUE_CHARACTERS_SET = [
+        '!',
+        '"',
+        '%',
+        '&',
+        '\'',
+        '(',
+        ')',
+        '*',
+        '+',
+        ',',
+        '-',
+        '_',
+        '.',
+        '/',
+        '0',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        ':',
+        ';',
+        '<',
+        '=',
+        '>',
+        '?',
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+        'F',
+        'G',
+        'H',
+        'I',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'O',
+        'P',
+        'Q',
+        'R',
+        'S',
+        'T',
+        'U',
+        'V',
+        'W',
+        'X',
+        'Y',
+        'Z',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z',
+    ];
     private const FIXED_LENGTH_AIS = [
         '00' => 20,
         '01' => 16,
@@ -119,6 +203,8 @@ final class Parser implements ParserInterface
                 $position += $length + strlen($this->config->getGroupSeparator());
             }
 
+            $this->assertValueIsValid($value);
+
             if ($ai) {
                 $foundAIs[$ai] = $value;
             } else {
@@ -167,5 +253,14 @@ final class Parser implements ParserInterface
         }
 
         return [null, null];
+    }
+
+    private function assertValueIsValid(string $value): void
+    {
+        $unencodableCharacters = array_diff(str_split($value), self::ENCODABLE_VALUE_CHARACTERS_SET);
+
+        if (count($unencodableCharacters) > 0) {
+            throw InvalidBarcodeException::becauseValueContainsInvalidCharacters(...$unencodableCharacters);
+        }
     }
 }
