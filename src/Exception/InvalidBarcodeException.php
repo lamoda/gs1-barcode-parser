@@ -37,4 +37,14 @@ final class InvalidBarcodeException extends InvalidArgumentException implements 
     {
         return new static(sprintf('Group separator was not expected in AI "%s"', $value));
     }
+
+    public static function becauseValueContainsInvalidCharacters(string ...$invalidCharacters): self
+    {
+        return new static(sprintf(
+            'Value contains invalid characters: %s',
+            implode(', ', array_map(static function (string $character) {
+                return "\"$character\"";
+            }, $invalidCharacters))
+        ));
+    }
 }

@@ -174,11 +174,15 @@ final class ParserTest extends TestCase
     /**
      * @dataProvider dataParsingInvalidBarcode
      */
-    public function testParsingInvalidBarcode(ParserConfig $config, string $data): void
-    {
+    public function testParsingInvalidBarcode(
+        ParserConfig $config,
+        string $data,
+        string $expectedExceptionMessage
+    ): void {
         $parser = new Parser($config);
 
         $this->expectException(InvalidBarcodeException::class);
+        $this->expectExceptionMessage($expectedExceptionMessage);
         $parser->parse($data);
     }
 
@@ -192,24 +196,34 @@ final class ParserTest extends TestCase
         return [
             'empty' => [
                 $default,
-                ''
+                '',
+                'Barcode is empty',
             ],
             'no fnc1' => [
                 $default,
-                '01034531200000111719112510ABCD1234'
+                '01034531200000111719112510ABCD1234',
+                'FNC1 sequence is not found at the start of barcode',
             ],
             'no data after fnc1' => [
                 $default,
-                ']d2'
+                ']d2',
+                'Barcode does not contain data',
             ],
             'invalid data for fixed length ai' => [
                 $default,
-                ']d2010345'
+                ']d2010345',
+                'Not enough data for AI "01": 16 expected but 6 exists',
             ],
             'group separator inside fixed length data' => [
                 $default,
-                "]d20103453\u{001d}200000111719112510ABCD1234"
-            ]
+                "]d20103453\u{001d}200000111719112510ABCD1234",
+                'Group separator was not expected in AI "010345320000011"'
+            ],
+            'value contains invalid characters' => [
+                $default,
+                "]d2010 3`5'1200000111719112510ABCD123",
+                'Value contains invalid characters: " ", "`"'
+            ],
         ];
     }
 }
