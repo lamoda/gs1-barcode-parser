@@ -203,12 +203,14 @@ final class Parser implements ParserInterface
                 $position += $length + strlen($this->config->getGroupSeparator());
             }
 
-            $this->assertValueIsValid($value);
+            if ($length > 0) {
+                $this->assertValueIsValid($value);
 
-            if ($ai) {
-                $foundAIs[$ai] = $value;
-            } else {
-                $buffer[] = $value;
+                if ($ai) {
+                    $foundAIs[$ai] = $value;
+                } else {
+                    $buffer[] = $value;
+                }
             }
         }
 
