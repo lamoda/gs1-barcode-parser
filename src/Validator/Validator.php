@@ -79,6 +79,20 @@ final class Validator implements ValidatorInterface
             ]);
         }
 
+        foreach ($this->config->getAIConstraints() as $code => $constraint) {
+            if ($barcode->hasAI((string) $code)
+                && !$constraint($ai = $barcode->ai((string) $code))
+            ) {
+                return Resolution::createInvalid([
+                    ErrorCodes::INVALID_VALUE => sprintf(
+                        'AI is invalid: code=%s, value=%s',
+                        $code,
+                        $ai
+                    ),
+                ]);
+            }
+        }
+
         return Resolution::createValid();
     }
 
