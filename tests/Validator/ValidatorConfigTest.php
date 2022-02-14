@@ -18,6 +18,7 @@ final class ValidatorConfigTest extends TestCase
 
         self::assertEmpty($config->getRequiredAIs());
         self::assertEmpty($config->getForbiddenAIs());
+        self::assertEmpty($config->getAIConstraints());
         self::assertFalse($config->isAllowEmpty());
     }
 
@@ -26,10 +27,12 @@ final class ValidatorConfigTest extends TestCase
         $config = (new ValidatorConfig())
             ->setAllowEmpty(true)
             ->setRequiredAIs(['10'])
-            ->setForbiddenAIs(['01']);
+            ->setForbiddenAIs(['01'])
+            ->setAIConstraints(['01' => fn(string $ai) => true]);
 
         self::assertTrue($config->isAllowEmpty());
         self::assertEquals(['10'], $config->getRequiredAIs());
         self::assertEquals(['01'], $config->getForbiddenAIs());
+        self::assertEquals(['01' => fn(string $ai) => true], $config->getAIConstraints());
     }
 }

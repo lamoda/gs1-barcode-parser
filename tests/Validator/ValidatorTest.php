@@ -62,6 +62,10 @@ final class ValidatorTest extends TestCase
             ->setRequiredAIs(['10']);
         $forbiddenAI = (new ValidatorConfig())
             ->setForbiddenAIs(['01']);
+        $aiConstraintReturnTrue = (new ValidatorConfig())
+            ->setAIConstraints(['01' => fn (string $ai) => true]);
+        $aiConstraintReturnFalse = (new ValidatorConfig())
+            ->setAIConstraints(['01' => fn (string $ai) => false]);
 
         return [
             'valid' => [
@@ -112,6 +116,18 @@ final class ValidatorTest extends TestCase
                 ']d201034531200000111719112511ABCD1234',
                 Resolution::createInvalid([
                     ErrorCodes::FORBIDDEN_AIS => '',
+                ]),
+            ],
+            'ai constraint return true' => [
+                $aiConstraintReturnTrue,
+                ']d201034531200000111719112511ABCD1234',
+                Resolution::createValid(),
+            ],
+            'ai constraint return false' => [
+                $aiConstraintReturnFalse,
+                ']d201034531200000111719112511ABCD1234',
+                Resolution::createInvalid([
+                    ErrorCodes::INVALID_VALUE => 'AI is invalid: code=01, value=03453120000011',
                 ]),
             ],
         ];

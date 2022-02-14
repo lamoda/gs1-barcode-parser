@@ -8,6 +8,7 @@ final class ValidatorConfig
 {
     private $requiredAIs = [];
     private $forbiddenAIs = [];
+    private $aiConstraints = [];
     private $allowEmpty = false;
 
     public function getRequiredAIs(): array
@@ -41,5 +42,16 @@ final class ValidatorConfig
     {
         $this->allowEmpty = $allowEmpty;
         return $this;
+    }
+
+    public function setAIConstraints(array $aiConstraints): self
+    {
+        $this->aiConstraints = $aiConstraints;
+        return $this;
+    }
+
+    public function getAIConstraints(): array
+    {
+        return $this->aiConstraints;
     }
 }
